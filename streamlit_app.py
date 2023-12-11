@@ -53,6 +53,7 @@ if uploaded_file is not None:
         c += 1
 
         if not ret:
+            st.write("3")
             break
 
         frame, tvec_store, time_store, frame_store = pose_esitmation(frame, aruco_dict_type, k, d, c, tvec_store, time_store, frame_store)
