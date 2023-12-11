@@ -29,6 +29,7 @@ st.title('Video Upload for Pose Estimation')
 
 uploaded_file = st.file_uploader("Upload a video...", type=["mp4", "avi"])
 if uploaded_file is not None:
+    st.write("1")
     # Progress bar and status text
     progress_bar = st.progress(0)
     status_text = st.empty()
@@ -43,6 +44,7 @@ if uploaded_file is not None:
     d = np.load('distortion_coefficients.npy')
     st.write("matrix,coeff:",k)
     st.write("dist:,",d)
+    st.write("2")
     video = cv2.VideoCapture(uploaded_file.name)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
