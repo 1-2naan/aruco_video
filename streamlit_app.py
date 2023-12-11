@@ -50,10 +50,20 @@ if uploaded_file is not None:
     st.write("2")
     #video = cv2.VideoCapture(uploaded_file.name)
     # To read the file, you can use BytesIO
-    file_bytes = io.BytesIO(uploaded_file.read())
+    #file_bytes = io.BytesIO(uploaded_file.read())
     
     # Now use the file_bytes to open the video in OpenCV
-    video = cv2.VideoCapture(file_bytes)
+    #video = cv2.VideoCapture(file_bytes)
+
+    # Define a path for the video file
+    video_file_path = 'temp_video.mp4'  # or use a unique naming scheme
+
+    # Write the uploaded file to the defined path
+    with open(video_file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+
+    # Now use the path with OpenCV
+    video = cv2.VideoCapture(video_file_path)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
     while True:
