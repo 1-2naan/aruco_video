@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import time
 from cv2 import aruco
+import io
 
 # Pose estimation function
 def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coefficients, count, tvec_store, time_store, frame_store):
