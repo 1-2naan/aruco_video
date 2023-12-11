@@ -47,7 +47,12 @@ if uploaded_file is not None:
     st.write("matrix,coeff:",k)
     st.write("dist:,",d)
     st.write("2")
-    video = cv2.VideoCapture(uploaded_file.name)
+    #video = cv2.VideoCapture(uploaded_file.name)
+    # To read the file, you can use BytesIO
+    file_bytes = io.BytesIO(uploaded_file.read())
+    
+    # Now use the file_bytes to open the video in OpenCV
+    video = cv2.VideoCapture(file_bytes)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
     while True:
