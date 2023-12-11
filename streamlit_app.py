@@ -41,7 +41,8 @@ if uploaded_file is not None:
     aruco_dict_type = aruco.getPredefinedDictionary(aruco.DICT_7X7_50)
     k = np.load('calibration_matrix.npy')
     d = np.load('distortion_coefficients.npy')
-
+    st.write("matrix,coeff:",k)
+    st.write("dist:,",d)
     video = cv2.VideoCapture(uploaded_file.name)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
 
