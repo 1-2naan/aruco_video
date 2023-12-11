@@ -45,8 +45,8 @@ if uploaded_file is not None:
     aruco_dict_type = aruco.getPredefinedDictionary(aruco.DICT_7X7_50)
     k = np.load('calibration_matrix.npy')
     d = np.load('distortion_coefficients.npy')
-    st.write("matrix,coeff:",k)
-    st.write("dist:,",d)
+    #st.write("matrix,coeff:",k)
+    #st.write("dist:,",d)
     st.write("2")
     #video = cv2.VideoCapture(uploaded_file.name)
     # To read the file, you can use BytesIO
