@@ -31,9 +31,9 @@ if uploaded_file is not None:
     progress_bar = st.progress(0)
     status_text = st.empty()
 
-    tvec_store = np.array([0,0,0])
-    time_store = np.array([0])
-    frame_store = np.array([0])
+    tvec_store = np.empty((0, 3))
+    time_store = np.empty((0, 1))
+    frame_store = np.empty((0, 1))
     c = 0
 
     aruco_dict_type = aruco.getPredefinedDictionary(aruco.DICT_7X7_50)
