@@ -19,7 +19,9 @@ def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
             time_store = np.vstack((time_store, np.array(time.perf_counter())))
             cv2.aruco.drawDetectedMarkers(frame, corners)
             cv2.drawFrameAxes(frame, matrix_coefficients, distortion_coefficients, rvec, tvec, 0.01)
-
+            st.text(f"Markers detected in frame: {c}")
+    else:
+        st.text(f"No markers detected in frame: {c}")
     return frame, tvec_store, time_store, frame_store
 
 # Streamlit UI
