@@ -86,7 +86,7 @@ def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
             #st.write("4")
     else:
         #st.text(f"No markers detected in frame: {c}")
-        st.write("5")
+        #st.write("5")
     return frame, tvec_store, time_store, frame_store
 
 # Streamlit UI
@@ -94,7 +94,7 @@ st.title('Video Upload for Pose Estimation')
 
 uploaded_file = st.file_uploader("Upload a video...", type=["mp4", "avi"])
 if uploaded_file is not None:
-    st.write("1")
+    #st.write("1")
     # Progress bar and status text
     progress_bar = st.progress(0)
     status_text = st.empty()
@@ -109,7 +109,7 @@ if uploaded_file is not None:
     d = np.load('distortion_coefficients.npy')
     #st.write("matrix,coeff:",k)
     #st.write("dist:,",d)
-    st.write("2")
+    #st.write("2")
     #video = cv2.VideoCapture(uploaded_file.name)
     # To read the file, you can use BytesIO
     #file_bytes = io.BytesIO(uploaded_file.read())
