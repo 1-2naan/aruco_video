@@ -105,7 +105,7 @@ if uploaded_file is not None:
     # Progress bar and status text
     if not st.session_state['pose_estimation_done']:
         progress_bar = st.progress(0)
-        #status_text = st.empty()
+        status_text = st.empty()
     
         tvec_store = np.empty((0, 3))
         time_store = np.empty((0, 1))
@@ -152,6 +152,10 @@ if uploaded_file is not None:
         st.session_state['pose_estimation_data'] = df
         st.session_state['pose_estimation_done'] = True
         video.release()
+        
+        # Clear the progress bar and status text
+        progress_bar.empty()
+        status_text.empty()
     
     #csv = df.to_csv(index=False).encode('utf-8')
     # Sliders to adjust width for peak finding for each file
@@ -171,7 +175,3 @@ if uploaded_file is not None:
         file_name=f'{uploaded_file.name.split(".")[0]}_peaks_data.csv',
         mime='text/csv',
     )
-
-    # Clear the progress bar and status text
-    progress_bar.empty()
-    status_text.empty()
