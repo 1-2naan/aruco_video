@@ -160,12 +160,6 @@ if uploaded_file is not None:
     # Process the file and plot the data
     peaks_df = plot_hand_movement(df2, max_width, min_width)
 
-   ''' st.download_button(
-        label="Download CSV",
-        data=csv,
-        file_name=uploaded_file.name.split('.')[0] + '.csv',
-        mime='text/csv',
-    )'''
 
 # Provide a download link for the peaks DataFrame
     st.download_button(
