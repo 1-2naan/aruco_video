@@ -105,7 +105,7 @@ if uploaded_file is not None:
     # Progress bar and status text
     if not st.session_state['pose_estimation_done']:
         progress_bar = st.progress(0)
-        status_text = st.empty()
+        #status_text = st.empty()
     
         tvec_store = np.empty((0, 3))
         time_store = np.empty((0, 1))
