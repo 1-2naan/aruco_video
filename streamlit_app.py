@@ -152,6 +152,7 @@ if uploaded_file is not None:
         df2=df[['Timestamp','Distance']]
         st.session_state['pose_estimation_data'] = df2
         st.session_state['pose_estimation_done'] = True
+        video.release()
     
     #csv = df.to_csv(index=False).encode('utf-8')
     # Sliders to adjust width for peak finding for each file
@@ -171,8 +172,6 @@ if uploaded_file is not None:
         file_name=f'{uploaded_file.name.split(".")[0]}_peaks_data.csv',
         mime='text/csv',
     )
-
-    video.release()
 
     # Clear the progress bar and status text
     progress_bar.empty()
