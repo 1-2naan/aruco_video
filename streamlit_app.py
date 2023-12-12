@@ -58,7 +58,7 @@ def plot_hand_movement(data, max_width, min_width):
     })
 
     # Plotting
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(12, 10))
     plt.plot(timestamps, y, label='Hand Movement')
     plt.plot(timestamps[filtered_max_peaks], y[filtered_max_peaks], "bo", label='Maximum Peaks')
     plt.plot(timestamps[filtered_min_peaks], y[filtered_min_peaks], "ro", label='Minimum Peaks')
@@ -149,8 +149,7 @@ if uploaded_file is not None:
         df['Y1']=df['Y']-df['Y'][0]
         df['Z1']=df['Z']-df['Z'][0]
         df['Distance'] = (df['X1']**2+df['Y1']**2+df['Z1']**2)**0.5
-        df2=df[['Timestamp','Distance']]
-        st.session_state['pose_estimation_data'] = df2
+        st.session_state['pose_estimation_data'] = df
         st.session_state['pose_estimation_done'] = True
         video.release()
     
