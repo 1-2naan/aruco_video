@@ -92,66 +92,66 @@ def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
 # Streamlit UI
 st.title('Video Upload for Pose Estimation')
 
+# Initialize session state variables
+if 'pose_estimation_done' not in st.session_state:
+    st.session_state['pose_estimation_done'] = False
+if 'pose_estimation_data' not in st.session_state:
+    st.session_state['pose_estimation_data'] = None
+    
+
 uploaded_file = st.file_uploader("Upload a video...", type=["mp4", "avi"])
 if uploaded_file is not None:
     #st.write("1")
     # Progress bar and status text
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    tvec_store = np.empty((0, 3))
-    time_store = np.empty((0, 1))
-    frame_store = np.empty((0, 1))
-    c = 0
-
-    aruco_dict_type = aruco.getPredefinedDictionary(aruco.DICT_7X7_50)
-    k = np.load('calibration_matrix.npy')
-    d = np.load('distortion_coefficients.npy')
-    #st.write("matrix,coeff:",k)
-    #st.write("dist:,",d)
-    #st.write("2")
-    #video = cv2.VideoCapture(uploaded_file.name)
-    # To read the file, you can use BytesIO
-    #file_bytes = io.BytesIO(uploaded_file.read())
+    if not st.session_state['pose_estimation_done']:
+        progress_bar = st.progress(0)
+        status_text = st.empty()
     
-    # Now use the file_bytes to open the video in OpenCV
-    #video = cv2.VideoCapture(file_bytes)
-
-    # Define a path for the video file
-    video_file_path = 'temp_video.mp4'  # or use a unique naming scheme
-
-    # Write the uploaded file to the defined path
-    with open(video_file_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-
-    # Now use the path with OpenCV
-    video = cv2.VideoCapture(video_file_path)
-    total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    while True:
-        ret, frame = video.read()
-        c += 1
-
-        if not ret:
-            st.write("3")
-            break
-
-        frame, tvec_store, time_store, frame_store = pose_esitmation(frame, aruco_dict_type, k, d, c, tvec_store, time_store, frame_store)
-
-        # Update progress bar and status
-        progress_bar.progress(c / total_frames)
-        status_text.text(f'Processing frame {c}/{total_frames}')
-
-    arr = np.hstack((tvec_store, time_store, frame_store))
-    df = pd.DataFrame(arr, columns=['tvec_x', 'tvec_y', 'tvec_z', 'time', 'frame'])
-
-    df.columns=['X','Y','Z','T','Frame_num']
-    df[['Timestamp']]=df[['Frame_num']]/60
-    df['X1']=df['X']-df['X'][0]
-    df['Y1']=df['Y']-df['Y'][0]
-    df['Z1']=df['Z']-df['Z'][0]
-    df['Distance'] = (df['X1']**2+df['Y1']**2+df['Z1']**2)**0.5
-    df2=df[['Timestamp','Distance']]
+        tvec_store = np.empty((0, 3))
+        time_store = np.empty((0, 1))
+        frame_store = np.empty((0, 1))
+        c = 0
+    
+        aruco_dict_type = aruco.getPredefinedDictionary(aruco.DICT_7X7_50)
+        k = np.load('calibration_matrix.npy')
+        d = np.load('distortion_coefficients.npy')
+    
+        # Define a path for the video file
+        video_file_path = 'temp_video.mp4'  # or use a unique naming scheme
+    
+        # Write the uploaded file to the defined path
+        with open(video_file_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+    
+        # Now use the path with OpenCV
+        video = cv2.VideoCapture(video_file_path)
+        total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    
+        while True:
+            ret, frame = video.read()
+            c += 1
+    
+            if not ret:
+                st.write("3")
+                break
+    
+            frame, tvec_store, time_store, frame_store = pose_esitmation(frame, aruco_dict_type, k, d, c, tvec_store, time_store, frame_store)
+    
+            # Update progress bar and status
+            progress_bar.progress(c / total_frames)
+            status_text.text(f'Processing frame {c}/{total_frames}')
+    
+        arr = np.hstack((tvec_store, time_store, frame_store))
+        df = pd.DataFrame(arr, columns=['tvec_x', 'tvec_y', 'tvec_z', 'time', 'frame'])
+        df.columns=['X','Y','Z','T','Frame_num']
+        df[['Timestamp']]=df[['Frame_num']]/60
+        df['X1']=df['X']-df['X'][0]
+        df['Y1']=df['Y']-df['Y'][0]
+        df['Z1']=df['Z']-df['Z'][0]
+        df['Distance'] = (df['X1']**2+df['Y1']**2+df['Z1']**2)**0.5
+        df2=df[['Timestamp','Distance']]
+        st.session_state['pose_estimation_data'] = df2
+        st.session_state['pose_estimation_done'] = True
     
     #csv = df.to_csv(index=False).encode('utf-8')
     # Sliders to adjust width for peak finding for each file
@@ -159,8 +159,9 @@ if uploaded_file is not None:
     max_width = st.slider(f'Select Maximum Peak Width for {uploaded_file.name}', min_value=1, max_value=200, value=30, key=f"max_width_{uploaded_file.name}")
     min_width = st.slider(f'Select Minimum Peak Width for {uploaded_file.name}', min_value=1, max_value=200, value=40, key=f"min_width_{uploaded_file.name}")
 
+    df3 = st.session_state['pose_estimation_data']
     # Process the file and plot the data
-    peaks_df = plot_hand_movement(df2, max_width, min_width)
+    peaks_df = plot_hand_movement(df3, max_width, min_width)
 
 
 # Provide a download link for the peaks DataFrame
