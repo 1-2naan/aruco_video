@@ -84,9 +84,7 @@ def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
             cv2.drawFrameAxes(frame, matrix_coefficients, distortion_coefficients, rvec, tvec, 0.01)
             #st.text(f"Markers detected in frame: {c}")
             #st.write("4")
-    else:
-        #st.text(f"No markers detected in frame: {c}")
-        #st.write("5")
+    
     return frame, tvec_store, time_store, frame_store
 
 # Streamlit UI
