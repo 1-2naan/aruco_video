@@ -5,6 +5,8 @@ import pandas as pd
 import time
 from cv2 import aruco
 import io
+import matplotlib.pyplot as plt
+from scipy.signal import find_peaks
 
 def calculate_metrics(data, peaks):
     speeds = [0]  # Starting with an initial average speed of 0
