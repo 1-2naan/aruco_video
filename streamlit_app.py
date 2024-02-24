@@ -70,7 +70,6 @@ def plot_hand_movement(data, max_width, min_width):
 
     return peaks_df
     
-# Pose estimation function
 def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coefficients, count, tvec_store, time_store, frame_store):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     parameters = aruco.DetectorParameters_create()
@@ -78,14 +77,12 @@ def pose_esitmation(frame, aruco_dict_type, matrix_coefficients, distortion_coef
 
     if len(corners) > 0:
         for i in range(0, len(ids)):
-            rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.05, matrix_coefficients, distortion_coefficients)
+            rvec, tvec, markerPoints = aruco.estimatePoseSingleMarkers(corners[i], 0.05, matrix_coefficients, distortion_coefficients)
             frame_store = np.vstack((frame_store, count))
             tvec_store = np.vstack((tvec_store, tvec[0][0]))
             time_store = np.vstack((time_store, np.array(time.perf_counter())))
             cv2.aruco.drawDetectedMarkers(frame, corners)
             cv2.drawFrameAxes(frame, matrix_coefficients, distortion_coefficients, rvec, tvec, 0.01)
-            #st.text(f"Markers detected in frame: {c}")
-            #st.write("4")
     
     return frame, tvec_store, time_store, frame_store
 
@@ -97,11 +94,9 @@ if 'pose_estimation_done' not in st.session_state:
     st.session_state['pose_estimation_done'] = False
 if 'pose_estimation_data' not in st.session_state:
     st.session_state['pose_estimation_data'] = None
-    
 
 uploaded_file = st.file_uploader("Upload a video...", type=["mp4", "avi"])
 if uploaded_file is not None:
-    #st.write("1")
     # Progress bar and status text
     if not st.session_state['pose_estimation_done']:
         progress_bar = st.progress(0)
@@ -117,7 +112,7 @@ if uploaded_file is not None:
         d = np.load('distortion_coefficients.npy')
     
         # Define a path for the video file
-        video_file_path = 'temp_video.mp4'  # or use a unique naming scheme
+        video_file_path = 'temp_video.mp4'
     
         # Write the uploaded file to the defined path
         with open(video_file_path, "wb") as f:
@@ -132,7 +127,6 @@ if uploaded_file is not None:
             c += 1
     
             if not ret:
-                st.write("3")
                 break
     
             frame, tvec_store, time_store, frame_store = pose_esitmation(frame, aruco_dict_type, k, d, c, tvec_store, time_store, frame_store)
@@ -157,7 +151,6 @@ if uploaded_file is not None:
         progress_bar.empty()
         status_text.empty()
     
-    #csv = df.to_csv(index=False).encode('utf-8')
     # Sliders to adjust width for peak finding for each file
     st.write("Adjust the peak width settings for this file:")
     max_width = st.slider(f'Select Maximum Peak Width for {uploaded_file.name}', min_value=1, max_value=200, value=30, key=f"max_width_{uploaded_file.name}")
@@ -167,11 +160,19 @@ if uploaded_file is not None:
     # Process the file and plot the data
     peaks_df = plot_hand_movement(df3, max_width, min_width)
 
-
-# Provide a download link for the peaks DataFrame
+    # Provide a download link for the peaks DataFrame
     st.download_button(
         label="Download Peaks Data as CSV",
         data=peaks_df.to_csv(index=False).encode('utf-8'),
         file_name=f'{uploaded_file.name.split(".")[0]}_peaks_data.csv',
         mime='text/csv',
     )
+
+    # Provide a download link for the pose estimation DataFrame (df3)
+    if st.session_state['pose_estimation_data'] is not None:
+        st.download_button(
+            label="Download Pose Estimation Data as CSV",
+            data=st.session_state['pose_estimation_data'].to_csv(index=False).encode('utf-8'),
+            file_name=f'{uploaded_file.name.split(".")[0]}_pose_estimation_data.csv',
+            mime='text/csv',
+        )
